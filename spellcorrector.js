@@ -1,10 +1,13 @@
-/* 
-* SpellCorrector
-* Author: Eveleen Sung (eveleensung@gmail.com)
-* June 2016
-*/
+/* CREDITS: 
 
-/*
+ SpellCorrector
+ Author: Eveleen Sung (eveleensung@gmail.com)
+ June 2016
+
+================= ================= */
+
+/* PROBLEM: 
+
 # Word Correction
 
 Write a program in JavaScript that reads a large list of English words (e.g. from /usr/share/dict/words on a unix system) into memory, and then reads words from stdin, and prints either the best spelling correction, or "NO CORRECTION" if no suitable correction can be found.
@@ -36,8 +39,22 @@ If there are many possible corrections of an input word, your program can choose
 ## Incorrect Word Generator
 
 Write a second program that generates words with spelling mistakes of the above form, starting with correctly spelled English words. Pipe its output into the first program and verify that there are no occurrences of "NO CORRECTION" in the output.
-*/ 
 
+================= =================  */ 
+
+/* HOW TO USE:  
+
+To run: 
+
+$ node spellchecker.js words.txt
+> [type in input]
+
+To test:
+
+$ node spellchecker.js words.txt
+> run test
+
+================= ================= */
 
 (function() {
 	var fs = require('fs');
@@ -136,13 +153,15 @@ Write a second program that generates words with spelling mistakes of the above 
 		var firstLetter = word.charAt(0);
 		var remainder = word.substring(1);
 
+		//check for the end of node
 		if (node.complete) {
 			return ' '; //'' is falsy. Must trim the result. Not ideal. 
 		}
-
 		if (node[firstLetter] && node[firstLetter].complete && !remainder.length) {
 			return firstLetter;
 		} 
+		
+		// check for vowels
 		if (vowels.indexOf(firstLetter) > -1) {
 			for(var i = 0; i < vowels.length; i++) {
 				var vowel = vowels[i];
@@ -154,18 +173,23 @@ Write a second program that generates words with spelling mistakes of the above 
 				}
 			}
 		}
+
+		// check for duplicate letters
 		if (firstLetter === lastLetter) {
 			var result = search(node, word.substring(1), lastLetter);
 			if (result) {
 				return result;
 			}
 		} 
+
+		// continue on if node is available
 		if (node[firstLetter]) {
 			var result = search(node[firstLetter], remainder, firstLetter);
 			if (result) {
 				return firstLetter + result;
 			}
  		}
+
  		return false;
 	}
 
